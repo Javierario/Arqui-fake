@@ -20,7 +20,7 @@ component FA
            co : out std_logic);
     end component;
 
-signal c : std_logic_vector(6 downto 0);
+signal c : std_logic_vector(14 downto 0);
 
 begin
 

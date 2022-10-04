@@ -30,7 +30,7 @@ component ALU is
            c        : out std_logic;                       -- SeÒal de 'carry'.
            z        : out std_logic;                       -- SeÒal de 'zero'.
            n        : out std_logic;                       -- SeÒal de 'nagative'.
-           result   : out std_logic_vector (16 downto 0));  -- Resultado de la operaciÛn.
+           result   : out std_logic_vector (15 downto 0));  -- Resultado de la operaciÛn.
 end component;
 
 component ControlUnit is
@@ -276,13 +276,16 @@ inst_mux_a : Multiplexor port map(
 inst_mux_b : Multiplexor port map(
         e0        => "0000000000000000",   -- opción A,B:zero
 	    e1        => ram_dataout,   -- opción A:uno o B:ram_data_out
-	    e2        => rom_dataout,   -- opción A:nada, B:rom_data_out
+	    --revisar que bits dar
+	    e2        => rom_dataout(35 downto 20),   -- opción A:nada, B:rom_data_out
 	    e3        => regb_to_muxb,   -- opción A:RegA, B:RegB
         sel       => control_selb_to_muxb,    -- señal selector.
 	    result    => muxb_to_alu  -- Resultado de la selección.
 );
 
 ram_datain <= alu_result;
-
+dis(15 downto 8) <= rega_to_muxa(7 downto 0);
+dis(7 downto 0) <= regb_to_muxb(7 downto 0); 
+ 
 end Behavioral;
 
