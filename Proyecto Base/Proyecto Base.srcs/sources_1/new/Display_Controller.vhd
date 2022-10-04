@@ -68,5 +68,6 @@ with number select
                 "10100001" when "1101",
                 "10000110" when "1110",
                 "10001110" when "1111";
-            
+                
+          
 end Behavioral;

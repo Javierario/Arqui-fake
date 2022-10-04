@@ -81,8 +81,8 @@ component Reg_PC is
            loadPC   : in  std_logic;                        -- Señal de carga.
            up       : in  std_logic;                        -- Señal de subida.
            down     : in  std_logic;                        -- Señal de bajada.
-           datain   : in  std_logic_vector (11 downto 0);   -- Señales de entrada de datos.
-           dataout  : out std_logic_vector (11 downto 0));  -- Señales de salida de datos.
+           datain   : in  std_logic_vector (15 downto 0);   -- Señales de entrada de datos.
+           dataout  : out std_logic_vector (15 downto 0));  -- Señales de salida de datos.
 end component;
 
 ----------------
@@ -147,6 +147,8 @@ signal alu_result: std_logic_vector(15 downto 0);
 
 signal czn_juntos: std_logic_vector(2 downto 0);
 
+signal dataout_reg_pc: std_logic_vector(15 downto 0);
+
 begin
 
 -- inicio declaracion comportamientos
@@ -202,7 +204,7 @@ inst_alu: ALU port map(
 -- Instancia Control Unit
 
 inst_controlunit: ControlUnit port map(
-           opcode        => rom_dataout(35 downto 16),    -- Opcode
+           opcode     => rom_dataout(19 downto 0),    -- Opcode
            czn        => status_to_control,  -- status.
            enableA    => control_enablea_to_rega,  			      -- Reg A
            enableB    => control_enableb_to_regb,                      -- Reg B
@@ -241,9 +243,11 @@ inst_Reg_PC : Reg_PC port map(
            loadPC     => control_loadpc_to_pc,                        -- SeÒal de carga.
            up       => '1',                         -- SeÒal de subida.
            down     => '0',                         -- SeÒal de bajada.
-           datain   => rom_dataout(35 downto 24),    -- SeÒales de entrada de datos.
-           dataout  => rom_address   -- SeÒales de salida de datos.
+           datain   => rom_dataout(35 downto 20),    -- SeÒales de entrada de datos.
+           dataout => dataout_reg_pc  -- SeÒales de salida de datos.
 );
+
+rom_address <= dataout_reg_pc(11 downto 0); 
 
 -- Instancia Status
 
@@ -284,6 +288,7 @@ inst_mux_b : Multiplexor port map(
 );
 
 ram_datain <= alu_result;
+
 dis(15 downto 8) <= rega_to_muxa(7 downto 0);
 dis(7 downto 0) <= regb_to_muxb(7 downto 0); 
  
